@@ -5,7 +5,7 @@
 /.pnp
 .pnp.js
 .yarn/install-state.gz
-.his
+.history
 .env
 .env.local
 .env.development.local
