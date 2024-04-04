@@ -1,27 +1,27 @@
 'use client';
-import { Sparkles } from 'lucide-react';
-import { Button } from './ui/button';
-import { useState } from 'react';
-import { cn } from '@/lib/utils';
-import axios from 'axios';
-import { useToast } from '@/components/ui/use-toast';
 
-interface SubcriptionButtonProps {
-  className?: string;
+import { useState } from 'react';
+
+import { useToast } from './ui/use-toast';
+import { Button } from './ui/button';
+import axios from 'axios';
+import { Sparkles } from 'lucide-react';
+
+interface SubscriptionButtonProps {
   isPro?: boolean;
 }
 
-const SubcriptionButton: React.FC<SubcriptionButtonProps> = ({
-  className,
-  isPro,
-}) => {
-  const [loading, setLoading] = useState(false);
+const SubscriptionButton: React.FC<SubscriptionButtonProps> = ({ isPro }) => {
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+
   const handleSubcribe = async () => {
     try {
       setLoading(true);
       const { data } = await axios.get('/api/stripe');
+      location.href = data.url;
     } catch (error) {
+      console.log(error);
       toast({
         variant: 'destructive',
         description: 'Something went wrong. Please try again.',
@@ -30,23 +30,23 @@ const SubcriptionButton: React.FC<SubcriptionButtonProps> = ({
       setLoading(false);
     }
   };
+
   return (
-    <div className={className}>
+    <div>
       <Button
         variant='outline'
         size='lg'
         disabled={loading}
         onClick={handleSubcribe}
-        className={cn(
-          'text-white w-full font-semibold border-none gradient-btn',
-          'hover:text-white'
-        )}
+        className='text-white w-full font-semibold hover:text-white border-none gradient-btn'
       >
-        <span>{isPro ? 'Manage Subscription' : 'Upgrade to Pro'}</span>
-        <Sparkles />
+        <span className='mr-2'>
+          {isPro ? 'Manage Subscription' : 'Upgrade to Pro'}
+        </span>
+        {!isPro && <Sparkles />}
       </Button>
     </div>
   );
 };
 
-export default SubcriptionButton;
+export default SubscriptionButton;
